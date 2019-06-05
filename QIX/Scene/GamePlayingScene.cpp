@@ -35,7 +35,6 @@ void GamePlayingScene::FadeoutUpdate(const Peripheral & p)
 	}
 	else
 	{
-		//pal -= 5;
 		pal -= 20;
 	}
 }
@@ -62,9 +61,6 @@ GamePlayingScene::~GamePlayingScene()
 void GamePlayingScene::Update(const Peripheral& p)
 {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-
-	
-	//DxLib::DrawExtendGraph(figure->left, figure->up, figure->right, figure->down, img, true);	// ™z¢‚¿‚á‚ñ‚·‚±
 
 	tLogo->LogoDraw();
 

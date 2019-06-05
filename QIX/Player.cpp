@@ -74,16 +74,16 @@ void Player::LineToDot(const std::vector<Line>& ll)
 Player::Player()
 {
 	// 画像をランダムで決定
-	std::random_device rd;
+	/*std::random_device rd;
 	std::mt19937 mt(rd());
 
 	int num;
 	
-	std::string s = "img/" + std::to_string((mt() % 8) + 1) + ".png";
+	std::string s = "img/" + std::to_string((mt() % 8) + 1) + ".png";*/
 
 	//img = DxLib::LoadGraph(s.c_str());
-	img = DxLib::LoadGraph("img/yojo.png");
-	simg = DxLib::LoadGraph("img/yojo0.png");
+	img = DxLib::LoadGraph("img/bg1.png");		// ゲームを進めると現れる差分(ご褒美)画像
+	simg = DxLib::LoadGraph("img/bg2.png");		// 最初の画像
 
 	auto screenSize = Game::Instance().GetScreenSize();
 	auto fieldSize = Game::Instance().GetFieldSize();
@@ -120,7 +120,7 @@ Player::Player()
 	linedot.resize(0);
 
 	vel = Vector2(0, 0);
-	moveVel = 5;
+	moveVel = 4;
 	moveDir = DIR_DOWN;
 	oldMoveDir = moveDir;
 	startPos = Vector2(150, down);
@@ -186,7 +186,6 @@ void Player::Update(const Peripheral &p)
 				{
 					AddDotAndLine(pos);
 					AddPolygon(dotLegion, pos);
-					//AddPolygon(lineLegion, pos);
 					updater = &Player::MoveOn;
 				}
 			}
@@ -534,248 +533,6 @@ void Player::AddPolygon(std::vector<Vector2>& dotLegion, Vector2& _pos)
 	dotLegion.erase(dotLegion.begin(), dotLegion.end());
 }
 
-void Player::AddPolygon(std::vector<Line>& llegion, Vector2& _pos)
-{
-	Vector2 start;
-	
-	auto s = lineLegion.at(lineLegion.size() - 1);
-
-	// 塗りつぶしのスタート地点を決める
-	if (s.dir)
-	{
-		if ((_pos.y - moveVel) > up)
-		{
-			start = Vector2(_pos.x, (_pos.y - moveVel));
-		}
-		else if ((_pos.y + moveVel) < down)
-		{
-			start = Vector2(_pos.x, (_pos.y + moveVel));
-		}
-	}
-	else
-	{
-		if ((_pos.x + moveVel) < right)
-		{
-			start = Vector2((_pos.x + moveVel), _pos.y);
-		}
-		else if ((_pos.x - moveVel) > left)
-		{
-			start = Vector2((_pos.x - moveVel), _pos.y);
-		}
-	}
-
-	
-	// 引いた線を点に変える
-	LineToDot(llegion);
-
-	// 開始点を加える
-	AddCell(start);
-
-	// とりあえずつぶす
-	while (cellcount.size() > 0)
-	{
-		Vector2 popup = PopCell();
-
-		int count = 0;
-		for(int a = 0; a < linedot.size(); a++)
-		{
-			auto dot = linedot.at(a);
-			
-			if ((Vector2((popup.x + moveVel), popup.y) == dot) && ((popup.x + moveVel) < right))
-			{
-				int c = 0;
-				/*for (auto dotb : linedot)
-				{
-					if ((Vector2((popup.x - moveVel), popup.y) == dotb) && ((popup.x - moveVel) >= left))
-					{
-						c++;
-					}
-					else if ((Vector2(popup.x, (popup.y + moveVel)) == dotb) && ((popup.y + moveVel) < down))
-					{
-						c++;
-					}
-					else if ((Vector2(popup.x, (popup.y - moveVel)) == dotb) && ((popup.y - moveVel) >= up))
-					{
-						c++;
-					}
-				}*/
-
-				/*if (!c)
-				{
-					if ((popup.x - moveVel) >= left)
-					{
-						AddCell(Vector2((popup.x - moveVel), popup.y));
-					}
-					if ((popup.y + moveVel) < down)
-					{
-						AddCell(Vector2(popup.x, (popup.y + moveVel)));
-					}
-					if ((popup.y - moveVel) >= up)
-					{
-						AddCell(Vector2(popup.x, (popup.y - moveVel)));
-					}
-				}*/
-				
-				count++;
-			}
-			if ((Vector2((popup.x - moveVel), popup.y) == dot) && ((popup.x - moveVel) >= left))
-			{
-				int c = 0;
-				/*for (auto dotb : linedot)
-				{
-					if ((Vector2((popup.x + moveVel), popup.y) == dotb) && ((popup.x + moveVel) < right))
-					{
-						c++;
-					}
-					else if ((Vector2(popup.x, (popup.y + moveVel)) == dotb) && ((popup.y + moveVel) < down))
-					{
-						c++;
-					}
-					else if ((Vector2(popup.x, (popup.y - moveVel)) == dotb) && ((popup.y - moveVel) >= up))
-					{
-						c++;
-					}
-				}*/
-
-				/*if (!c)
-				{
-					if ((popup.x + moveVel) < right)
-					{
-						AddCell(Vector2((popup.x + moveVel), popup.y));
-					}
-					if ((popup.y + moveVel) < down)
-					{
-						AddCell(Vector2(popup.x, (popup.y + moveVel)));
-					}
-					if ((popup.y - moveVel) >= up)
-					{
-						AddCell(Vector2(popup.x, (popup.y - moveVel)));
-					}
-				}*/
-				count++;
-			}
-			if ((Vector2(popup.x, (popup.y + moveVel)) == dot) && ((popup.y + moveVel) < down))
-			{
-				int c = 0;
-				/*for (auto dotb : linedot)
-				{
-					if ((Vector2((popup.x + moveVel), popup.y) == dotb) && ((popup.x + moveVel) < right))
-					{
-						c++;
-					}
-					else if ((Vector2((popup.x - moveVel), popup.y) == dotb) && ((popup.x - moveVel) >= left))
-					{
-						c++;
-					}
-					else if ((Vector2(popup.x, (popup.y - moveVel)) == dotb) && ((popup.y - moveVel) >= up))
-					{
-						c++;
-					}
-				}*/
-
-				/*if (!c)
-				{
-					if ((popup.x + moveVel) < right)
-					{
-						AddCell(Vector2((popup.x + moveVel), popup.y));
-					}
-					if ((popup.x - moveVel) >= left)
-					{
-						AddCell(Vector2((popup.x - moveVel), popup.y));
-					}
-					if ((popup.y - moveVel) >= up)
-					{
-						AddCell(Vector2(popup.x, (popup.y - moveVel)));
-					}
-				}*/
-				count++;
-			}		
-			if ((Vector2(popup.x, (popup.y - moveVel)) == dot) && ((popup.y - moveVel) >= up))
-			{
-				int c = 0;
-				/*for (auto dotb : linedot)
-				{
-					if ((Vector2((popup.x + moveVel), popup.y) == dotb) && ((popup.x + moveVel) < right))
-					{
-						c++;
-					}
-					else if ((Vector2((popup.x - moveVel), popup.y) == dotb) && ((popup.x - moveVel) >= left))
-					{
-						c++;
-					}
-					else if ((Vector2(popup.x, (popup.y + moveVel)) == dotb) && ((popup.y + moveVel) < down))
-					{
-						c++;
-					}
-				}*/
-
-				/*if (!c)
-				{
-					if ((popup.x + moveVel) < right)
-					{
-						AddCell(Vector2((popup.x + moveVel), popup.y));
-					}
-					if ((popup.x - moveVel) >= left)
-					{
-						AddCell(Vector2((popup.x - moveVel), popup.y));
-					}
-					if ((popup.y + moveVel) < down)
-					{
-						AddCell(Vector2(popup.x, (popup.y + moveVel)));
-					}
-				}*/
-				count++;
-			}
-
-			if (count)
-			{
-				break;
-			}
-		}
-		if (!count)
-		{
-			if ((popup.x + moveVel) <= right)
-			{
-				AddCell(Vector2((popup.x + moveVel), popup.y));
-			}
-			if ((popup.x - moveVel) >= left)
-			{
-				AddCell(Vector2((popup.x - moveVel), popup.y));
-			}
-			if ((popup.y + moveVel) <= down)
-			{
-				AddCell(Vector2(popup.x, (popup.y + moveVel)));
-			}
-			if ((popup.y - moveVel) >= up)
-			{
-				AddCell(Vector2(popup.x, (popup.y - moveVel)));
-			}
-		}
-	}
-
-	// つぶしたところで四角をつくる
-	//std::sort(cell.begin(), cell.end(), [](const Vector2& a, const Vector2& b) {return a.y < b.y; });
-	//std::sort(cell.begin(), cell.end(), [](const Vector2& a, const Vector2& b) {return a.x < b.x; });
-
-	for (auto dot : cell)
-	{
-		Box b = Box(dot, Vector2(dot.x + moveVel, dot.y + moveVel));
-		boxLegion.push_back(b);
-	}
-	
-	Line lastline = Line(_pos, dotLegion.at(0));
-	lineLegion.push_back(lastline);
-
-	// 外線に変更
-	for (int a = 0; a < (lineLegion.size() - 1); a++)
-	{
-		Line l = lineLegion.at(a);
-		outLineLegion.push_back(l);
-	}
-
-	lineLegion.resize(0);
-	dotLegion.erase(dotLegion.begin(), dotLegion.end());
-}
 
 void Player::LineDraw()
 {
@@ -827,35 +584,30 @@ void Player::DebugDraw()
 
 bool Player::NotOutOfRange()
 {
-	int count = 0;
+	bool flag = false;
 
 	// 範囲外にはいかせないぜ
 	if (pos.x <= left)
 	{
 		pos.x = left;
-		count++;
+		flag = true;
 	}
 	else if (pos.x >= right)
 	{
 		pos.x = right;
-		count++;
+		flag = true;;
 	}
 
 	if (pos.y <= up)
 	{
 		pos.y = up;
-		count++;
+		flag = true;
 	}
 	else if (pos.y >= down)
 	{
 		pos.y = down;
-		count++;
+		flag = true;
 	}
 
-	if (count)
-	{
-		return true;
-	}
-
-	return false;
+	return flag;
 }
