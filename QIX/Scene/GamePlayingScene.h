@@ -15,8 +15,6 @@ private:
 	void FadeinUpdate(const Peripheral& p);
 	void FadeoutUpdate(const Peripheral& p);
 
-
-	int img;
 	Vector2 ssize;
 
 	std::shared_ptr<TitleLogo> tLogo;

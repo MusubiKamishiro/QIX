@@ -14,6 +14,7 @@ private:
 	void operator=(const Game&);	// ‘ã“ü‹ÖŽ~
 
 	const Vector2 ScreenSize;
+	float time, fps, count, oldcount;
 	Box field;
 
 public:

@@ -41,8 +41,6 @@ void GamePlayingScene::FadeoutUpdate(const Peripheral & p)
 
 GamePlayingScene::GamePlayingScene()
 {
-	img = DxLib::LoadGraph("img/rinze.png");
-
 	GetJoypadInputState(DX_INPUT_KEY_PAD1);		// パッドもしくはキーボードで動かせる
 
 	player.reset(new Player());

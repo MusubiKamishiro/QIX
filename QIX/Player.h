@@ -4,6 +4,17 @@
 #include <memory>
 #include <vector>
 
+struct Seed
+{
+	Vector2 pos;	// 点の座標
+	int color;		// 塗られてる色
+
+	bool operator==(const Vector2& inv)
+	{
+		return (pos == inv);
+	}
+};
+
 enum Dir
 {
 	DIR_UP,
@@ -27,7 +38,8 @@ private:
 
 	void Draw(Vector2& pos);					// プレイヤーの描画
 	void AddDotAndLine(Vector2& pos);
-	void AddPolygon(std::vector<Vector2>& dotLegion, Vector2& _pos);
+	//void AddPolygon(std::vector<Vector2>& dotLegion, Vector2& _pos);
+	void AddPolygon();
 	void LineDraw();
 	void OutLineDraw();
 	void PolygonDraw();
@@ -36,25 +48,27 @@ private:
 	
 	bool NotOutOfRange();
 
-	Vector2 startPos;			// 開始座標
-	Vector2 pos;				// 現在座標
-	Vector2 vel;				// 移動速度
-	int moveVel;				// 移動量
-	int moveDir;				// 移動方向
-	int oldMoveDir;				// 1つ前の移動方向
+	Vector2 startPos;	// 開始座標
+	Vector2 pos;		// 現在座標
+	Vector2 vel;		// 移動速度
+	int moveVel;		// 移動量
+	int moveDir;		// 移動方向
+	int oldMoveDir;		// 1つ前の移動方向
 
-	std::vector<Vector2> dotLegion;			// 点の軍勢
-	std::vector<Vector2> outDotLegion;		// 外線の点の軍勢
-	std::vector<Line> lineLegion;			// 線の軍勢
-	std::vector<Line> outLineLegion;		// 外線の軍勢
-	std::vector<Box> boxLegion;				// 四角形の軍勢
+	std::vector<Vector2> dotLegion;		// 点の軍勢
+	std::vector<Line> lineLegion;		// 線の軍勢
+	std::vector<Line> outLineLegion;	// 外線の軍勢
+	std::vector<Box> boxLegion;			// 四角形の軍勢
 
-	std::vector<Vector2> cell;		// 塗りつぶし場所
+	std::vector<Seed> seeds;
+	std::vector<Seed> nextSeeds;
+
+	std::vector<Vector2> cell;			// 塗りつぶし場所
 	std::vector<Vector2> cellcount;
-	std::vector<Vector2> linedot;	// 元線の点
+	std::vector<Vector2> linedot;		// 元線の点
 
-	void AddCell(const Vector2& inv);		// 追加
-	Vector2 PopCell();						// 取り出し
+	void AddCell(const Vector2& inv);	// 追加
+	Vector2 PopCell();					// 取り出し
 
 	void LineToDot(const std::vector<Line>& ll);		// 線から点へ
 

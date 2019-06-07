@@ -9,6 +9,7 @@
 Game::Game() : ScreenSize(720, 450)//(720, 450)
 {
 	field = Box(10, 50, ScreenSize.x - 10, ScreenSize.y - 20);
+	time = fps = count = oldcount = 0;
 }
 
 void Game::operator=(const Game &)
@@ -43,6 +44,7 @@ void Game::Run()
 
 	while (DxLib::ProcessMessage() == 0)
 	{
+		++time;
 		DxLib::ClearDrawScreen();
 
 		if (DxLib::CheckHitKey(KEY_INPUT_ESCAPE))
@@ -51,7 +53,18 @@ void Game::Run()
 		}
 		peripheral.Update();
 
+		count = DxLib::GetNowCount();
+		if ((count - oldcount) > 1000)
+		{
+			fps = ((time * 1000) / (count - oldcount));
+			oldcount = count;
+			time = 0;
+		}
+
 		scene->Update(peripheral);
+
+		DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		DxLib::DrawFormatString(ScreenSize.x - 100, ScreenSize.y - 20, 0xff00ff, "%.2f fps", fps);
 
 		DxLib::ScreenFlip();
 	}
