@@ -13,9 +13,10 @@ private:
 	Game(const Game&);				// ｺﾋﾟｰ禁止
 	void operator=(const Game&);	// 代入禁止
 
-	const Vector2 ScreenSize;
-	float time, fps, count, oldcount;
-	Box field;
+	const Vector2 ScreenSize;	// 画面サイズ
+	Box field;					// プレイヤーが移動可能な範囲
+	float time, fps, count, oldcount;	// fps表示の際に使用する
+
 
 public:
 	// ｼﾝｸﾞﾙﾄﾝｲﾝﾀｰﾌｪｰｽ

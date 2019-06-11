@@ -8,7 +8,7 @@
 
 Game::Game() : ScreenSize(720, 450)//(720, 450)
 {
-	field = Box(10, 50, ScreenSize.x - 10, ScreenSize.y - 20);
+	field = Box(10, 50, (ScreenSize.x - 10), (ScreenSize.y - 20));
 	time = fps = count = oldcount = 0;
 }
 

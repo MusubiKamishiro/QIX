@@ -3,6 +3,10 @@
 #include "CharacterObject.h"
 #include <memory>
 #include <vector>
+#include <array>
+
+
+//#include "Game.h"
 
 struct Seed
 {
@@ -25,6 +29,7 @@ enum Dir
 };
 
 class Peripheral;
+
 
 class Player
 {
@@ -60,17 +65,17 @@ private:
 	std::vector<Line> outLineLegion;	// 外線の軍勢
 	std::vector<Box> boxLegion;			// 四角形の軍勢
 
-	std::vector<Seed> seeds;
-	std::vector<Seed> nextSeeds;
+	std::array<Seed, ((710-10 + 1) * (430-50 + 1))> seeds;
+	//10, 50, 720 - 10, 450 - 20
 
-	std::vector<Vector2> cell;			// 塗りつぶし場所
-	std::vector<Vector2> cellcount;
-	std::vector<Vector2> linedot;		// 元線の点
+	//std::vector<Vector2> cell;			// 塗りつぶし場所
+	//std::vector<Vector2> cellcount;
+	//std::vector<Vector2> linedot;		// 元線の点
 
-	void AddCell(const Vector2& inv);	// 追加
-	Vector2 PopCell();					// 取り出し
+	//void AddCell(const Vector2& inv);	// 追加
+	//Vector2 PopCell();					// 取り出し
 
-	void LineToDot(const std::vector<Line>& ll);		// 線から点へ
+	//void LineToDot(const std::vector<Line>& ll);		// 線から点へ
 
 	// 移動範囲内
 	int up;
