@@ -8,69 +8,6 @@
 #include <random>
 #include <string>
 
-//void Player::AddCell(const Vector2 & inv)
-//{
-//	int cnt = 0;
-//
-//	if (cell.size() == 0)
-//	{
-//		cell.push_back(inv);
-//		cellcount.push_back(inv);
-//	}
-//	else
-//	{
-//		for (auto p : cell)
-//		{
-//			if (p == inv)
-//			{
-//				cnt++;
-//				break;
-//			}
-//		}
-//
-//		if (cnt == 0)
-//		{
-//			cell.push_back(inv);
-//			cellcount.push_back(inv);
-//		}
-//	}
-//}
-//
-//Vector2 Player::PopCell()
-//{
-//	Vector2 seed = cellcount.at(0);
-//	cellcount.erase(cellcount.begin());
-//
-//	return seed;
-//}
-
-//void Player::LineToDot(const std::vector<Line>& ll)
-//{
-//	linedot.resize(0);
-//	cellcount.resize(0);
-//	cell.resize(0);
-//
-//	for (auto line : ll)
-//	{
-//		if (line.dir)
-//		{
-//			for (int d = line.dotA.x; d < line.dotB.x; d += moveVel)
-//			{
-//				Vector2 dot = Vector2(d, line.dotA.y);
-//				linedot.push_back(dot);
-//			}
-//		}
-//		else
-//		{
-//			for (int d = line.dotA.y; d < line.dotB.y; d += moveVel)
-//			{
-//				Vector2 dot = Vector2(line.dotA.x, d);
-//				linedot.push_back(dot);
-//			}
-//		}
-//
-//	}
-//}
 
 Player::Player()
 {
@@ -122,33 +59,6 @@ Player::Player()
 			}
 		}
 	}
-
-
-	/*seeds.reserve((fieldSize.dotB.x - fieldSize.dotA.x) * (fieldSize.dotB.y - fieldSize.dotA.y));
-
-	
-	for (auto& l : outLineLegion)
-	{
-		for (int y = l.dotA.y; y <= l.dotB.y; ++y)
-		{
-			for (int x = l.dotA.x; x <= l.dotB.x; ++x)
-			{
-				seeds.push_back({ Vector2(x, y), 0xff0000 });
-			}
-		}
-	}
-	for (int y = (fieldSize.dotA.y + 1); y <= (fieldSize.dotB.y - 1); ++y)
-	{
-		for (int x = (fieldSize.dotA.x + 1); x <= (fieldSize.dotB.x - 1); ++x)
-		{
-			seeds.push_back({ Vector2(x, y), 0x000000 });
-		}
-	}*/
-
-	// スキャンラインフィルのため
-	/*cell.resize(0);
-	cellcount.resize(0);
-	linedot.resize(0);*/
 
 	vel = Vector2(0, 0);
 	moveVel = 5;
@@ -214,13 +124,6 @@ void Player::Update(const Peripheral &p)
 			{
 				startPos = pos;
 
-				/*if (dotLegion.size() > 1)
-				{
-					AddDotAndLine(pos);
-					AddPolygon(dotLegion, pos);
-					updater = &Player::MoveOn;
-				}*/
-
 				if (dotLegion.size())
 				{
 					AddDotAndLine(pos);
@@ -237,22 +140,17 @@ void Player::Update(const Peripheral &p)
 		LineDraw();
 	}
 	OutLineDraw();
-	Draw(pos);
+	
 	
 	for (auto& d : seeds)
 	{
-		if (d.color != 0x000000)
+		if ((d.color != 0x000000) && (d.color != 0xff0000))
 		{
-			DxLib::DrawPixel(d.pos.x, d.pos.y, d.color);
+			DxLib::DrawRectGraph(d.pos.x, d.pos.y, (d.pos.x - left), (d.pos.y - up), 1, 1, BG, true, false);
 		}
-		/*else
-		{
-			if (d.pos == pos)
-			{
-				d.color = 0xff0000;
-			}
-		}*/
 	}
+
+	Draw(pos);
 
 
 #ifdef _DEBUG
@@ -369,224 +267,6 @@ void Player::AddDotAndLine(Vector2& pos)
 	lineLegion.push_back(line);
 }
 
-//void Player::AddPolygon(std::vector<Vector2>& dotLegion, Vector2& _pos)
-//{
-//	Line lastline = Line(_pos, dotLegion.at(0));
-//	lineLegion.push_back(lastline);
-//
-//	std::vector<Vector2> dlegion;
-//	std::vector<Line> slegion, llegion;		// side, lenght
-//	dlegion.resize(0);
-//	slegion.resize(0);
-//	llegion.resize(0);
-//	
-//	auto screenSize = Game::Instance().GetScreenSize();
-//	slegion.push_back(Line(right, down, left, down));
-//	llegion.push_back(Line(right, up, right, down));
-//
-//	// 縦線と横線に分ける
-//	for (auto line : lineLegion)
-//	{
-//		if (line.dir)
-//		{
-//			slegion.push_back(line);
-//		}
-//		else
-//		{
-//			llegion.push_back(line);
-//		}
-//	}
-//
-//	// 左上点さんを探す
-//	for (auto line : slegion)
-//	{
-//		dlegion.push_back(line.dotA);
-//	}
-//
-//	std::sort(dlegion.begin(), dlegion.end(), [](const Vector2& a, const Vector2& b) {return a.y < b.y; });
-//	std::sort(dlegion.begin(), dlegion.end(), [](const Vector2& a, const Vector2& b) {return a.x < b.x; });
-//	
-//	auto originDlegion = dlegion;
-//	
-//	Vector2 downDot = Vector2(0, 0);
-//	Box box;
-//
-//	// 四角を作っていくよ
-//	for (int a = 0; a < dlegion.size(); a++)
-//	{
-//		auto d = dlegion.at(a);
-//		Vector2 sPos = Vector2(d.x, d.y);
-//		Vector2 ePos;
-//		box.dotA = d;
-//		Vector2 end = Vector2(right, down);
-//		bool cdflag = false;	// カウントダウンフラグ
-//
-//		for (ePos.x = (sPos.x + moveVel); ePos.x <= end.x; ePos.x += moveVel)
-//		{
-//			// 横線判定
-//			for(auto sline : slegion)
-//			{
-//				// 開始点のある横線を探索し、左点をendに
-//				if (sline.HitDot(sPos))
-//				{
-//					end.x = sline.dotB.x;
-//					break;
-//				}
-//			}
-//			// 縦線判定
-//			for(auto lline : llegion)
-//			{
-//				// 開始点のある縦線を探索し、下点を削除
-//				if (lline.HitDot(sPos))
-//				{
-//					auto downdot = lline.dotB;
-//					for (int d = 0; d < dlegion.size(); d++)
-//					{
-//						auto dl = dlegion.at(d);
-//						if (downdot == dl)
-//						{
-//							dlegion.erase(dlegion.begin() + d);
-//							cdflag = true;
-//							break;
-//						}
-//					}
-//				}
-//			}
-//
-//			int count = 0;
-//			bool flag = false;
-//			for (ePos.y = (sPos.y + moveVel); ePos.y <= end.y; ePos.y += moveVel)
-//			{
-//				for(auto sline : slegion)
-//				{
-//					if (sline.HitDot(ePos))
-//					{
-//						// ラインの右点だったらその点のある縦線の下の点を削除
-//						if (ePos == sline.dotB)
-//						{
-//							for(auto lline : llegion)
-//							{
-//								if(ePos == lline.dotA)
-//								{
-//									for (int d = 0; d < dlegion.size(); d++)
-//									{
-//										auto deld = dlegion.at(d);
-//										if (deld == lline.dotB)
-//										{
-//											dlegion.erase(dlegion.begin() + d);
-//											cdflag = true;
-//											break;
-//										}
-//									}
-//								}
-//							}
-//						}
-//
-//						// ラインの左点でだったらその点を削除
-//						if (ePos != sline.dotA)
-//						{
-//							box = Box(sPos, ePos);
-//							boxLegion.push_back(box);
-//							flag = true;
-//							sPos.x = ePos.x;
-//
-//							break;
-//						}
-//						else
-//						{
-//							if (end.x != ePos.x)
-//							{
-//								if (count == 0)
-//								{
-//									// 元のdlegionにあれば最初の点のみ削除
-//									for(auto origindot : originDlegion)
-//									{
-//										if (origindot == ePos)
-//										{
-//											count++;
-//
-//											for (int e = 0; e < dlegion.size(); e++)
-//											{
-//												auto de = dlegion.at(e);
-//
-//												if (de == origindot)
-//												{
-//													dlegion.erase(dlegion.begin() + e);
-//													cdflag = true;
-//												}
-//											}
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//				if (flag)
-//				{
-//					flag = false;
-//					break;
-//				}
-//			}
-//		}
-//
-//		box = Box(sPos.x, sPos.y, ePos.x - moveVel, ePos.y - moveVel);
-//		boxLegion.push_back(box);
-//
-//		if (cdflag)
-//		{
-//			a = 0;
-//		}
-//
-//	}
-//
-//	// 四角になってないものを削除
-//	for (int a = 0; a < boxLegion.size(); a++)
-//	{
-//		auto box = boxLegion.at(a);
-//		if ((box.dotA.x == box.dotB.x) || (box.dotA.y == box.dotB.y))
-//		{
-//			boxLegion.erase(boxLegion.begin() + a);
-//			a--;
-//		}
-//
-//		for (int b = a + 1; b < boxLegion.size(); b++)
-//		{
-//			auto boxb = boxLegion.at(b);
-//
-//			if (box == boxb)
-//			{
-//				boxLegion.erase(boxLegion.begin() + b);
-//				b--;
-//			}
-//		}
-//	}
-//
-//	// 同じ大きさで隣接してる四角をくっつける
-//	for (int a = 0; a < (boxLegion.size() - 1); a++)
-//	{
-//		auto boxa = boxLegion.at(a);
-//		auto boxb = boxLegion.at(a + 1);
-//
-//		if ((boxa.dotA.y == boxb.dotA.y) && (boxa.dotB.y == boxb.dotB.y))
-//		{
-//			boxLegion.erase(boxLegion.begin() + a, boxLegion.begin() + (a + 2));
-//			boxLegion.insert(boxLegion.begin() + a, Box(boxa.dotA, boxb.dotB));
-//			a--;
-//		}
-//	}
-//
-//	// 外線に変更
-//	for (int a = 0; a < (lineLegion.size() - 1); a++)
-//	{
-//		Line l = lineLegion.at(a);
-//		outLineLegion.push_back(l);
-//	}
-//
-//	lineLegion.resize(0);
-//	dotLegion.erase(dotLegion.begin(), dotLegion.end());
-//}
-
 void Player::AddPolygon()
 {
 	auto fieldSize = Game::Instance().GetFieldSize();
@@ -619,7 +299,7 @@ void Player::AddPolygon()
 		seed = seeds.at(num);
 		if (seed.color == 0x000000)
 		{
-			seeds.at(num).color = 0xffffff;
+			//seeds.at(num).color = 0xffffff;
 			flag = false;
 		}
 	}
@@ -628,54 +308,66 @@ void Player::AddPolygon()
 
 	while (seedQueue.size())
 	{
-
 		// シードから左右の限界を見つける
 		int rx = right, lx = left;
 		for (Vector2 rseed = Vector2((seed.pos.x + 1), seed.pos.y); rseed.x <= right; ++rseed.x)
 		{
-			if (seeds.at(rseed.x - fieldSize.dotA.x + (rseed.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
+			if (seeds.at((rseed.x - fieldSize.dotA.x) + (rseed.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
 			{
-				//seeds.at(rseed.x - fieldSize.dotA.x + (rseed.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color = 0x0000ff;
 				rx = rseed.x;
 				break;
 			}
 		}
 		for (Vector2 lseed = Vector2((seed.pos.x - 1), seed.pos.y); lseed.x >= left; --lseed.x)
 		{
-			if (seeds.at(lseed.x - fieldSize.dotA.x + (lseed.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
+			if (seeds.at((lseed.x - fieldSize.dotA.x) + (lseed.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
 			{
-				//seeds.at(lseed.x - fieldSize.dotA.x + (lseed.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color = 0x00ff00;
 				lx = lseed.x;
 				break;
 			}
 		}
 
 		// 上で見つけた端から端まで塗りつぶす
-		for (int i = lx; i < rx; ++i)
+		for (int i = (lx + 1); i < rx; ++i)
 		{
-			seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color = 0x00ff00;
+			seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color = 0x00ff00;
 		}
 
 		// 上の1つ上の左右までみて塗れる右側をシード候補に入れる
-		for (int i = lx; i < rx; ++i)
+		for (int i = lx + 1; i <= rx; ++i)
 		{
-			if (seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
+			if (seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
 			{
-				if (seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color == 0xff0000)
+				if (seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color == 0xff0000)
 				{
-					seedQueue.push(seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)));
+					seedQueue.push(seeds.at((i - fieldSize.dotA.x - 1) + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)));
 				}
 			}
 
+			if (i == rx)
+			{
+				if (seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color == 0x000000)
+				{
+					seedQueue.push(seeds.at((i - fieldSize.dotA.x - 1) + (seed.pos.y - fieldSize.dotA.y - 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)));
+				}
+			}
 		}
 		// 上の1つ下の左右までみて塗れる右側をシード候補に入れる
-		for (int i = lx; i < rx; ++i)
+		for (int i = lx + 1; i <= rx; ++i)
 		{
-			if (seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
+			if (seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color != 0x000000)
 			{
-				if (seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color == 0x000000)
+				if (seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color == 0xff0000)
 				{
-					seedQueue.push(seeds.at(i - fieldSize.dotA.x + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)));
+					seedQueue.push(seeds.at((i - fieldSize.dotA.x - 1) + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)));
+				}
+			}
+
+			if (i == rx)
+			{
+				if (seeds.at((i - fieldSize.dotA.x) + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)).color == 0x000000)
+				{
+					seedQueue.push(seeds.at((i - fieldSize.dotA.x - 1) + (seed.pos.y - fieldSize.dotA.y + 1) * (fieldSize.dotB.x - fieldSize.dotA.x + 1)));
 				}
 			}
 		}
@@ -684,8 +376,13 @@ void Player::AddPolygon()
 		while (flag && seedQueue.size())
 		{
 			// シード候補から1つ取り出してシードに入れる
-			seed = seedQueue.front();
 			seedQueue.pop();
+			if (!seedQueue.size())
+			{
+				break;
+			}
+			seed = seedQueue.front();
+			
 			// シードが有効なら繰り返す
 			if (seed.color == 0x000000)
 			{

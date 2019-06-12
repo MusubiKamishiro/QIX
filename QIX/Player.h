@@ -6,8 +6,6 @@
 #include <array>
 
 
-//#include "Game.h"
-
 struct Seed
 {
 	Vector2 pos;	// 点の座標
@@ -43,7 +41,6 @@ private:
 
 	void Draw(Vector2& pos);					// プレイヤーの描画
 	void AddDotAndLine(Vector2& pos);
-	//void AddPolygon(std::vector<Vector2>& dotLegion, Vector2& _pos);
 	void AddPolygon();
 	void LineDraw();
 	void OutLineDraw();
@@ -68,16 +65,7 @@ private:
 	std::array<Seed, ((710-10 + 1) * (430-50 + 1))> seeds;
 	//10, 50, 720 - 10, 450 - 20
 
-	//std::vector<Vector2> cell;			// 塗りつぶし場所
-	//std::vector<Vector2> cellcount;
-	//std::vector<Vector2> linedot;		// 元線の点
-
-	//void AddCell(const Vector2& inv);	// 追加
-	//Vector2 PopCell();					// 取り出し
-
-	//void LineToDot(const std::vector<Line>& ll);		// 線から点へ
-
-	// 移動範囲内
+		// 移動範囲内
 	int up;
 	int right;
 	int left;
