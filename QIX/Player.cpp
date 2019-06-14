@@ -299,7 +299,6 @@ void Player::AddPolygon()
 		seed = seeds.at(num);
 		if (seed.color == 0x000000)
 		{
-			//seeds.at(num).color = 0xffffff;
 			flag = false;
 		}
 	}
