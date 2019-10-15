@@ -17,13 +17,13 @@ void GamePlayingScene::FadeinUpdate(const Peripheral & p)
 		updater = &GamePlayingScene::FadeoutUpdate;
 	}
 
-	if (pal == 255)
+	if (pal >= 255)
 	{
-		;
+		pal = 255;
 	}
 	else
 	{
-		pal++;
+		pal += 20;
 	}
 }
 

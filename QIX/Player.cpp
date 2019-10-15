@@ -19,8 +19,8 @@ Player::Player()
 	
 	std::string s = "img/" + std::to_string((mt() % 8) + 1) + ".png";*/
 	//img = DxLib::LoadGraph(s.c_str());
-	img = DxLib::LoadGraph("img/bg1.png");		// ゲームを進めると現れる差分(ご褒美)画像
-	simg = DxLib::LoadGraph("img/bg2.png");		// 最初の画像
+	img = DxLib::LoadGraph("img/bg1clear.png");		// ゲームを進めると現れる差分(ご褒美)画像
+	simg = DxLib::LoadGraph("img/bg1start.png");	// 最初の画像
 
 	auto screenSize = Game::Instance().GetScreenSize();
 	auto fieldSize = Game::Instance().GetFieldSize();
@@ -285,7 +285,6 @@ void Player::AddPolygon()
 		}
 	}
 
-
 	std::random_device rd;
 	std::mt19937 mt(rd());
 
@@ -425,7 +424,6 @@ void Player::PolygonDraw()
 {
 	for(auto box : boxLegion)
 	{
-		//DxLib::DrawBox(box.dotA.x, box.dotA.y, box.dotB.x, box.dotB.y, 0xffff00, true);
 		DxLib::DrawRectGraph(box.dotA.x, box.dotA.y, (box.dotA.x - left), (box.dotA.y - up), (box.dotB.x - box.dotA.x), (box.dotB.y - box.dotA.y), BG, true, false);
 	}
 }
@@ -443,21 +441,13 @@ void Player::DebugDraw()
 	s = "確定線の数：";
 	s += std::to_string(outLineLegion.size());
 	DxLib::DrawString(550, 60, s.c_str(), 0x00ffff);
-
-	for (auto& a : seeds)
-	{
-		if (a.color == 0xffffff)
-		{
-			DxLib::DrawString(a.pos.x, a.pos.y, "0", 0xff0000);
-		}
-	}
 }
 
 bool Player::NotOutOfRange()
 {
 	bool flag = false;
 
-	// 範囲外にはいかせないぜ
+	// 範囲外にはいかせない
 	if (pos.x <= left)
 	{
 		pos.x = left;

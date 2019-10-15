@@ -12,13 +12,13 @@ void TitleScene::FadeinUpdate(const Peripheral & p)
 		updater = &TitleScene::FadeoutUpdate;
 	}
 	
-	if (pal == 255)
+	if (pal >= 255)
 	{
-		;
+		pal = 255;
 	}
 	else
 	{
-		pal++;
+		pal += 20;
 	}
 }
 
@@ -30,7 +30,6 @@ void TitleScene::FadeoutUpdate(const Peripheral & p)
 	}
 	else
 	{
-		//pal -= 5;
 		pal -= 20;
 	}
 }

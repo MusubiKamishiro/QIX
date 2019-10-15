@@ -65,7 +65,7 @@ private:
 	std::array<Seed, ((710-10 + 1) * (430-50 + 1))> seeds;
 	//10, 50, 720 - 10, 450 - 20
 
-		// ˆÚ“®”ÍˆÍ“à
+	// ˆÚ“®”ÍˆÍ“à
 	int up;
 	int right;
 	int left;
